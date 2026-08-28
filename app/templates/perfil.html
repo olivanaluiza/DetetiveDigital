@@ -1,0 +1,145 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil de {{ user.username }} | Detetive Digital</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body class="fundo-dark">
+
+ <!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg py-3 border-bottom border-dark">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center gap-2" href="{% url 'index' %}">
+            <i class="bi bi-fingerprint logo-icon"></i>
+            <div class="logo-texto">
+                <span class="marca-topo">DETETIVE</span>
+                <span class="marca-base">DIGITAL</span>
+            </div>
+        </a>
+
+        <button class="navbar-toggler border-0 text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+            <i class="bi bi-list fs-2 text-verde"></i>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarContent">
+            <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-lg-3">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'index' %}">Início</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'index' %}#sobre">Sobre</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'index' %}#como-funciona">Como Funciona</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'index' %}#tipos-de-golpes">Tipos de Golpes</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'index' %}#ranking">Ranking</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'index' %}#contato">Contato</a>
+                </li>
+            </ul>
+
+            <div class="d-flex align-items-center gap-2">
+                <a href="{% url 'perfil' %}" class="btn btn-entrar active-link">
+                    <i class="bi bi-person-circle me-1"></i> {{ user.username }}
+                </a>
+                <a href="{% url 'logout' %}" class="btn btn-outline-danger btn-sm px-3 rounded-2 fw-semibold">
+                    <i class="bi bi-box-arrow-right me-1"></i> Sair
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <!-- Container Principal do Perfil -->
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-7 col-lg-5">
+                
+                <div class="profile-card">
+                    <!-- Capa Decorativa Superior -->
+                    <div class="profile-card-banner"></div>
+
+                    <!-- Conteúdo do Perfil -->
+                    <div class="profile-card-body text-center">
+                        
+                        <!-- Avatar Flutuante -->
+                        <div class="profile-avatar-wrapper mx-auto">
+                            <img src="https://ui-avatars.com/api/?name={{ user.username }}&background=0f2d22&color=2ecc71&bold=true&size=128" 
+                                 alt="Avatar de {{ user.username }}" class="profile-avatar-img">
+                        </div>
+
+                        <!-- Nome e Username -->
+                        <h3 class="fw-bold text-white mt-3 mb-1">
+                            {% if user.get_full_name %}
+                                {{ user.get_full_name }}
+                            {% else %}
+                                {{ user.username }}
+                            {% endif %}
+                        </h3>
+                        <p class="profile-username mb-4">@{{ user.username }}</p>
+
+                        <!-- Bloco de Informações Organizado em Linhas -->
+                        <div class="info-list text-start mb-4">
+                            <div class="info-item">
+                                <div class="info-icon"><i class="bi bi-person"></i></div>
+                                <div>
+                                    <span class="info-label">Nome de Usuário</span>
+                                    <span class="info-value">{{ user.username }}</span>
+                                </div>
+                            </div>
+
+                            <div class="info-item">
+                                <div class="info-icon"><i class="bi bi-envelope"></i></div>
+                                <div>
+                                    <span class="info-label">E-mail Cadastrado</span>
+                                    <span class="info-value">{{ user.email }}</span>
+                                </div>
+                            </div>
+
+                            <div class="info-item">
+                                <div class="info-icon"><i class="bi bi-calendar-check"></i></div>
+                                <div>
+                                    <span class="info-label">Membro Desde</span>
+                                    <span class="info-value">{{ user.date_joined|date:"d/m/Y" }}</span>
+                                </div>
+                            </div>
+
+                            <div class="info-item">
+                                <div class="info-icon"><i class="bi bi-clock-history"></i></div>
+                                <div>
+                                    <span class="info-label">Último Acesso</span>
+                                    <span class="info-value">
+                                        {% if user.last_login %}
+                                            {{ user.last_login|date:"d/m/Y H:i" }}
+                                        {% else %}
+                                            Primeiro acesso
+                                        {% endif %}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Botão de Retorno -->
+                        <a href="{% url 'index' %}" class="btn btn-main-action w-100 py-2 fw-semibold">
+                            <i class="bi bi-arrow-left me-2"></i>Voltar ao Início
+                        </a>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
