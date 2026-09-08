@@ -10,4 +10,6 @@ urlpatterns = [
     path('cadastro/', CadastroView.as_view(), name='cadastro'),
     path('perfil/', PerfilView.as_view(), name='perfil'),
     path('logout/', LogoutView.as_view(), name='logout'),
+    path('quizzes/', QuizzesView.as_view(), name='quizzes'),
+    path('quiz/<int:pk>/', QuizDetalheView.as_view(), name='detalhe_quiz'),
 ]

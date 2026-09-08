@@ -70,3 +70,44 @@ class LogoutView(View):
     def get(self, request, *args, **kwargs):
         logout(request)
         return redirect('index')
+
+class QuizzesView(LoginRequiredMixin, View):
+    def get(self, request, *args, **kwargs):
+        quizzes = Quiz.objects.all()
+        # Chama a Tela 3 (Lista)
+        return render(request, 'quizzes.html', {'quizzes': quizzes})
+
+
+class QuizDetalheView(LoginRequiredMixin, View):
+    def get(self, request, pk, *args, **kwargs):
+        quiz = get_object_or_404(Quiz, pk=pk)
+        perguntas = Pergunta.objects.filter(quiz=quiz)
+        # Chama a Tela 2 (Perguntas)
+        return render(request, 'quizzes.html', {'quiz': quiz, 'perguntas': perguntas})
+
+    def post(self, request, pk, *args, **kwargs):
+        quiz = get_object_or_404(Quiz, pk=pk)
+        perguntas = Pergunta.objects.filter(quiz=quiz)
+        
+        pontuacao = 0
+        for pergunta in perguntas:
+            alternativa_id = request.POST.get(f'pergunta_{pergunta.id_pergunta}')
+            if alternativa_id:
+                if Alternativa.objects.filter(id_alternativa=alternativa_id, correta=True).exists():
+                    pontuacao += 1
+
+        usuario_db = Usuario.objects.filter(email=request.user.email).first()
+        if usuario_db:
+            TentativaQuiz.objects.create(
+                usuario=usuario_db,
+                quiz=quiz,
+                pontuacao=pontuacao
+            )
+
+        # Chama a Tela 1 (Resultado)
+        return render(request, 'quizzes.html', {
+            'quiz': quiz,
+            'pontuacao': pontuacao,
+            'total': perguntas.count(),
+            'perguntas': perguntas
+        })

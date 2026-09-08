@@ -1,0 +1,189 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quizzes - Detetive Digital</title>
+    
+    <!-- Bootstrap CSS & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    
+    <!-- CSS do Projeto -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body class="fundo-dark d-flex flex-column min-vh-100">
+
+    <!-- ================= NAVBAR IDÊNTICA AO INDEX ================= -->
+    <nav class="navbar navbar-expand-lg border-bottom border-dark py-3">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="{% url 'index' %}">
+                <i class="bi bi-fingerprint logo-icon"></i>
+                <div class="logo-texto">
+                    <span class="marca-topo">DETETIVE</span>
+                    <span class="marca-base">DIGITAL</span>
+                </div>
+            </a>
+            <button class="navbar-toggler border-0 text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <i class="bi bi-list fs-2"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center gap-3 mt-3 mt-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'index' %}">Início</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Sobre</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Como Funciona</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active-link" href="#">Ranking</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Contato</a>
+                    </li>
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center gap-1" href="{% url 'perfil' %}">
+                                <i class="bi bi-person-circle"></i> {{ user.username }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn btn-outline-danger btn-sm px-3 ms-lg-2" href="{% url 'logout' %}">Sair</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="btn btn-entrar" href="{% url 'login' %}">Entrar</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn btn-cadastrar" href="{% url 'cadastro' %}">Cadastrar</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ================= CONTEÚDO PRINCIPAL ================= -->
+    <main class="container py-5 flex-grow-1">
+
+        <!-- 1. TELA DE RESULTADO DO QUIZ -->
+        {% if pontuacao is not None %}
+            <div style="max-width: 760px;" class="mx-auto">
+                <div class="card-quiz-wrapper p-4 p-md-5 text-center mb-4">
+                    <i class="bi bi-trophy-fill display-4 text-verde mb-3"></i>
+                    <h2 class="fw-bold mb-1">Resultado do Quiz</h2>
+                    <p class="text-secondary mb-4">{{ quiz.titulo }}</p>
+                    
+                    <div class="display-2 fw-bold text-verde mb-2">
+                        {{ pontuacao }} <span class="fs-4 text-secondary">/ {{ total }}</span>
+                    </div>
+                    <p class="text-light fs-5 mb-0">Você acertou <strong>{{ pontuacao }}</strong> de <strong>{{ total }}</strong> questões.</p>
+                </div>
+
+                <h4 class="fw-bold mb-3 text-verde fs-5">Explicação das Questões</h4>
+                
+                {% for pergunta in perguntas %}
+                    <div class="card-pergunta p-4 mb-3">
+                        <h6 class="fw-bold text-white mb-2">
+                            <i class="bi bi-question-circle text-verde me-2"></i>{{ pergunta.enunciado }}
+                        </h6>
+                        <p class="mb-0 text-secondary fs-7">
+                            <strong class="text-white">Explicação:</strong> {{ pergunta.explicacao }}
+                        </p>
+                    </div>
+                {% endfor %}
+
+                <div class="d-flex flex-column flex-sm-row gap-3 mt-4">
+                    <a href="{% url 'quizzes' %}" class="btn btn-verde-acao py-2 flex-grow-1">
+                        <i class="bi bi-controller me-1"></i> Voltar para Quizzes
+                    </a>
+                    <a href="{% url 'index' %}" class="btn btn-outline-acao py-2">
+                        Início
+                    </a>
+                </div>
+            </div>
+
+        <!-- 2. TELA DE RESPONDER O QUIZ -->
+        {% elif quiz %}
+            <div style="max-width: 760px;" class="mx-auto">
+                <div class="mb-4">
+                    <span class="badge-nivel d-inline-block mb-2">{{ quiz.nivel }}</span>
+                    <h2 class="fw-bold text-white mb-2">{{ quiz.titulo }}</h2>
+                    <p class="text-secondary fs-6">{{ quiz.descricao }}</p>
+                </div>
+
+                <form method="POST">
+                    {% csrf_token %}
+                    
+                    {% for pergunta in perguntas %}
+                        <div class="card-quiz-wrapper p-4 mb-4">
+                            <h5 class="fw-bold text-verde fs-6 mb-3">Questão {{ forloop.counter }}</h5>
+                            <p class="fs-5 text-white mb-4">{{ pergunta.enunciado }}</p>
+
+                            <div class="d-flex flex-column gap-3">
+                                {% for alternativa in pergunta.alternativa_set.all %}
+                                    <label class="opcao-quiz d-flex align-items-center gap-3">
+                                        <input class="form-check-input mt-0" type="radio" name="pergunta_{{ pergunta.id_pergunta }}" value="{{ alternativa.id_alternativa }}" required>
+                                        <span class="form-check-label text-white fs-6">{{ alternativa.texto }}</span>
+                                    </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% empty %}
+                        <div class="alert alert-dark text-secondary border-secondary">Este quiz ainda não possui perguntas cadastradas.</div>
+                    {% endfor %}
+
+                    {% if perguntas %}
+                        <button type="submit" class="btn btn-verde-acao w-100 py-3 fw-bold mb-3">
+                            Enviar Respostas <i class="bi bi-arrow-right ms-1"></i>
+                        </button>
+                    {% endif %}
+                    
+                    <a href="{% url 'quizzes' %}" class="btn btn-outline-acao w-100 py-2">Cancelar</a>
+                </form>
+            </div>
+
+        <!-- 3. LISTAGEM DE QUIZZES -->
+        {% else %}
+            <div class="mb-5">
+                <h2 class="titulo-hero fs-2 text-white mb-2">Quizzes de Segurança</h2>
+                <p class="subtitulo-hero">Escolha um teste e coloque seus conhecimentos em prática contra ameaças virtuais.</p>
+            </div>
+
+            <div class="row g-4">
+                {% for item in quizzes %}
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <div class="card-quiz-wrapper p-4 h-100 d-flex flex-column justify-content-between">
+                            <div>
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <h5 class="fw-bold text-white fs-5 mb-0">{{ item.titulo }}</h5>
+                                    <span class="badge-nivel">{{ item.nivel }}</span>
+                                </div>
+                                <p class="text-secondary fs-7 mb-4">{{ item.descricao }}</p>
+                            </div>
+                            <a href="{% url 'quiz_detalhe' pk=item.pk %}" class="btn btn-verde-acao w-100 py-2">
+                                Iniciar Quiz <i class="bi bi-arrow-right ms-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="col-12">
+                        <div class="card-quiz-wrapper p-4 text-center text-secondary">
+                            <i class="bi bi-exclamation-circle fs-3 text-verde mb-2 d-block"></i>
+                            Nenhum quiz disponível no momento.
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+    </main>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
