@@ -171,25 +171,52 @@ class QuizDetalheView(View):
     
 class RankingView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
+
         usuarios = Usuario.objects.all()
 
         ranking = []
 
         for usuario in usuarios:
-            tentativas = TentativaQuiz.objects.filter(usuario=usuario)
 
-            pontos = 0
+            # Pega todos os quizzes que esse usuário já tentou
+            tentativas = TentativaQuiz.objects.filter(
+                usuario=usuario
+            )
 
-            for tentativa in tentativas:
-                pontos += tentativa.pontuacao
+            # Guarda somente a maior pontuação de cada quiz
+            maiores_pontuacoes = []
+
+            quizzes_feitos = tentativas.values('quiz').distinct()
+
+            for quiz in quizzes_feitos:
+
+                maior_pontuacao = tentativas.filter(
+                    quiz=quiz['quiz']
+                ).order_by('-pontuacao').first()
+
+                if maior_pontuacao:
+                    maiores_pontuacoes.append(
+                        maior_pontuacao.pontuacao
+                    )
+
+            # Soma apenas as maiores pontuações
+            pontos = sum(maiores_pontuacoes)
 
             ranking.append({
                 'usuario': usuario,
                 'pontos': pontos
             })
 
-        ranking.sort(key=lambda x: x['pontos'], reverse=True)
+        # Maior pontuação primeiro
+        ranking.sort(
+            key=lambda x: x['pontos'],
+            reverse=True
+        )
 
-        return render(request, 'ranking.html', {
+        return render(
+            request,
+            'ranking.html',
+            {
                 'ranking': ranking
-            })
+            }
+        )
