@@ -447,3 +447,400 @@ body.fundo-dark {
     text-transform: uppercase;
     font-weight: 700;
 }
+/* 1. Garante que a caixa toda seja o botão clicável */
+.opcao-customizada {
+    background-color: #060c15;
+    border: 1px solid #1e293b !important;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+    display: flex;
+}
+/* Hover na opção */
+.opcao-customizada:hover {
+    border-color: #22c55e !important;
+    background-color: rgba(34, 197, 94, 0.05);
+}
+/* 2. Mantém o radio ativo para o HTML, mas esconde visualmente sem usar display:none */
+.opcao-customizada input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+}
+/* 3. Estilo do círculo com a Letra (A, B, C, D) */
+.letra-indicador {
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+    border: 2px solid #1e293b;
+    color: #64748b;
+    background-color: #0d1726;
+    transition: all 0.2s ease;
+}
+/* Altera o container da alternativa */
+.opcao-customizada:has(input[type="radio"]:checked) {
+    border-color: #22c55e !important;
+    background-color: rgba(34, 197, 94, 0.12);
+    box-shadow: 0 0 10px rgba(34, 197, 94, 0.15);
+}
+/* Altera a bola da letra (A, B, C, D) para verde quando selecionado */
+.opcao-customizada input[type="radio"]:checked ~ .letra-indicador {
+    border-color: #22c55e;
+    background-color: #22c55e;
+    color: #03070d;
+}
+/* Destaca o texto da alternativa selecionada */
+.opcao-customizada input[type="radio"]:checked ~ span {
+    color: #ffffff;
+    font-weight: 600;
+}
+/* =========================================
+   RANKING
+========================================= */
+
+.ranking-header {
+    padding-top: 20px;
+}
+
+.ranking-icon {
+    width: 70px;
+    height: 70px;
+    margin: 0 auto 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 20px;
+
+    background: rgba(0, 255, 136, 0.08);
+    border: 1px solid rgba(0, 255, 136, 0.25);
+
+    color: #00ff88;
+
+    font-size: 30px;
+
+    box-shadow: 0 0 30px rgba(0, 255, 136, 0.08);
+}
+
+.titulo-ranking {
+    color: #ffffff;
+    font-size: 38px;
+    font-weight: 800;
+    margin-bottom: 10px;
+}
+
+.titulo-ranking span {
+    color: #00ff88;
+}
+
+.subtitulo-ranking {
+    color: #9ca3af;
+    font-size: 16px;
+    margin-bottom: 0;
+}
+
+
+/* CONTAINER */
+
+.ranking-container {
+    max-width: 900px;
+    margin: 0 auto;
+
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+
+/* ITEM */
+
+.ranking-item {
+    min-height: 88px;
+
+    display: flex;
+    align-items: center;
+
+    padding: 18px 24px;
+
+    border-radius: 16px;
+
+    background: #111827;
+
+    border: 1px solid rgba(255, 255, 255, 0.06);
+
+    transition: 0.25s ease;
+}
+
+.ranking-item:hover {
+    transform: translateY(-2px);
+
+    border-color: rgba(0, 255, 136, 0.35);
+
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+}
+
+
+/* PRIMEIROS LUGARES */
+
+.ranking-item.primeiro-lugar {
+    border-color: rgba(255, 215, 0, 0.35);
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(255, 215, 0, 0.08),
+            #111827
+        );
+}
+
+.ranking-item.segundo-lugar {
+    border-color: rgba(192, 192, 192, 0.25);
+}
+
+.ranking-item.terceiro-lugar {
+    border-color: rgba(205, 127, 50, 0.25);
+}
+
+
+/* POSIÇÃO */
+
+.ranking-posicao {
+    width: 65px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+}
+
+.medalha {
+    font-size: 34px;
+}
+
+.numero-posicao {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: rgba(255, 255, 255, 0.05);
+
+    color: #9ca3af;
+
+    font-size: 15px;
+    font-weight: 700;
+}
+
+
+/* USUÁRIO */
+
+.ranking-usuario {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+
+    flex: 1;
+}
+
+.avatar-ranking {
+    width: 48px;
+    height: 48px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: rgba(0, 255, 136, 0.10);
+
+    color: #00ff88;
+
+    font-size: 22px;
+
+    border: 1px solid rgba(0, 255, 136, 0.18);
+}
+
+.ranking-usuario h5 {
+    margin: 0;
+
+    color: #ffffff;
+
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.nivel-ranking {
+    display: block;
+
+    margin-top: 3px;
+
+    color: #6b7280;
+
+    font-size: 12px;
+}
+
+.voce-ranking {
+    display: inline-block;
+
+    margin-top: 4px;
+    padding: 2px 8px;
+
+    border-radius: 20px;
+
+    background: rgba(0, 255, 136, 0.10);
+
+    color: #00ff88;
+
+    font-size: 11px;
+    font-weight: 600;
+}
+
+
+/* PONTUAÇÃO */
+
+.ranking-pontos {
+    min-width: 100px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.ranking-pontos strong {
+    color: #00ff88;
+
+    font-size: 21px;
+    font-weight: 800;
+}
+
+.ranking-pontos span {
+    color: #6b7280;
+
+    font-size: 12px;
+}
+
+
+/* USUÁRIO LOGADO */
+
+.ranking-item.usuario-atual {
+    border-color: rgba(0, 255, 136, 0.45);
+
+    box-shadow:
+        0 0 20px rgba(0, 255, 136, 0.05);
+}
+
+
+/* RANKING VAZIO */
+
+.ranking-vazio {
+    text-align: center;
+
+    padding: 70px 30px;
+
+    border-radius: 18px;
+
+    background: #111827;
+
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.ranking-vazio-icon {
+    width: 65px;
+    height: 65px;
+
+    margin: 0 auto 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: rgba(0, 255, 136, 0.08);
+
+    color: #00ff88;
+
+    font-size: 28px;
+}
+
+.ranking-vazio h4 {
+    color: #ffffff;
+
+    font-weight: 700;
+
+    margin-bottom: 8px;
+}
+
+.ranking-vazio p {
+    color: #6b7280;
+
+    margin-bottom: 25px;
+}
+
+
+/* RESPONSIVO */
+
+@media (max-width: 576px) {
+
+    .titulo-ranking {
+        font-size: 30px;
+    }
+
+    .subtitulo-ranking {
+        font-size: 14px;
+    }
+
+    .ranking-item {
+        padding: 14px;
+    }
+
+    .ranking-posicao {
+        width: 45px;
+    }
+
+    .medalha {
+        font-size: 27px;
+    }
+
+    .numero-posicao {
+        width: 36px;
+        height: 36px;
+
+        font-size: 13px;
+    }
+
+    .avatar-ranking {
+        width: 42px;
+        height: 42px;
+
+        font-size: 18px;
+    }
+
+    .ranking-usuario {
+        gap: 10px;
+    }
+
+    .ranking-usuario h5 {
+        font-size: 14px;
+    }
+
+    .ranking-pontos {
+        min-width: 65px;
+    }
+
+    .ranking-pontos strong {
+        font-size: 17px;
+    }
+
+}

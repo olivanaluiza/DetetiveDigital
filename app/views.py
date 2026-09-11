@@ -78,36 +78,118 @@ class QuizzesView(LoginRequiredMixin, View):
         return render(request, 'quizzes.html', {'quizzes': quizzes})
 
 
-class QuizDetalheView(LoginRequiredMixin, View):
-    def get(self, request, pk, *args, **kwargs):
+class QuizDetalheView(View):
+    def get(self, request, pk):
         quiz = get_object_or_404(Quiz, pk=pk)
-        perguntas = Pergunta.objects.filter(quiz=quiz)
-        # Chama a Tela 2 (Perguntas)
-        return render(request, 'quizzes.html', {'quiz': quiz, 'perguntas': perguntas})
-
-    def post(self, request, pk, *args, **kwargs):
-        quiz = get_object_or_404(Quiz, pk=pk)
-        perguntas = Pergunta.objects.filter(quiz=quiz)
+        perguntas_list = quiz.pergunta_set.all()
         
-        pontuacao = 0
-        for pergunta in perguntas:
-            alternativa_id = request.POST.get(f'pergunta_{pergunta.id_pergunta}')
-            if alternativa_id:
-                if Alternativa.objects.filter(id_alternativa=alternativa_id, correta=True).exists():
-                    pontuacao += 1
+        pagina_atual = int(request.GET.get('pagina', 1))
+        
+        # Se estiver recomeçando o quiz (página 1), limpa as respostas salvas na sessão
+        if pagina_atual == 1:
+            request.session[f'respostas_quiz_{pk}'] = {}
 
-        usuario_db = Usuario.objects.filter(email=request.user.email).first()
-        if usuario_db:
-            TentativaQuiz.objects.create(
-                usuario=usuario_db,
-                quiz=quiz,
-                pontuacao=pontuacao
-            )
+        total_perguntas = perguntas_list.count()
+        pergunta = perguntas_list[pagina_atual - 1] if 1 <= pagina_atual <= total_perguntas else None
 
-        # Chama a Tela 1 (Resultado)
-        return render(request, 'quizzes.html', {
+        # Pontuação acumulada do histórico do usuário
+        pontos_acumulados = 0
+        if request.user.is_authenticated:
+            usuario_custom = Usuario.objects.filter(email=request.user.email).first()
+            if usuario_custom:
+                tentativas = TentativaQuiz.objects.filter(usuario=usuario_custom)
+                pontos_acumulados = sum(t.pontuacao for t in tentativas if t.pontuacao)
+
+        context = {
             'quiz': quiz,
-            'pontuacao': pontuacao,
-            'total': perguntas.count(),
-            'perguntas': perguntas
-        })
+            'pergunta': pergunta,
+            'pagina_atual': pagina_atual,
+            'total_perguntas': total_perguntas,
+            'tem_proxima': pagina_atual < total_perguntas,
+            'tem_anterior': pagina_atual > 1,
+            'pagina_anterior': pagina_atual - 1,
+            'proxima_pagina': pagina_atual + 1,
+            'pontos_acumulados': pontos_acumulados,
+        }
+        return render(request, 'quizzes.html', context)
+
+    def post(self, request, pk):
+        quiz = get_object_or_404(Quiz, pk=pk)
+        perguntas = quiz.pergunta_set.all()
+        
+        # Recupera as respostas guardadas das páginas anteriores
+        chave_sessao = f'respostas_quiz_{pk}'
+        respostas_salvas = request.session.get(chave_sessao, {})
+
+        # Grava a resposta da página atual enviada no form
+        for key, value in request.POST.items():
+            if key.startswith('pergunta_'):
+                respostas_salvas[key] = value
+        
+        request.session[chave_sessao] = respostas_salvas
+
+        pagina_atual = int(request.POST.get('pagina_atual', 1))
+        acao = request.POST.get('acao')
+
+        # Se o usuário clicou em "Próxima" ou "Voltar", salva na sessão e redireciona a página
+        if acao == 'proxima':
+            return redirect(f'/quiz/{pk}/?pagina={pagina_atual + 1}')
+        elif acao == 'voltar':
+            return redirect(f'/quiz/{pk}/?pagina={pagina_atual - 1}')
+
+        # Se clicou em "Finalizar" (acao == 'finalizar')
+        pontuacao_obtida = 0
+        for pergunta in perguntas:
+            resposta_id = respostas_salvas.get(f'pergunta_{pergunta.id_pergunta}')
+            if resposta_id:
+                alternativa = Alternativa.objects.filter(id_alternativa=resposta_id, correta=True).first()
+                if alternativa:
+                    pontuacao_obtida += 100
+
+        # Limpa as respostas da sessão após concluir
+        if chave_sessao in request.session:
+            del request.session[chave_sessao]
+
+        # Salva a tentativa no banco
+        if request.user.is_authenticated:
+            usuario_custom = Usuario.objects.filter(email=request.user.email).first()
+            if usuario_custom:
+                TentativaQuiz.objects.create(
+                    usuario=usuario_custom,
+                    quiz=quiz,
+                    pontuacao=pontuacao_obtida
+                )
+
+        context = {
+            'quiz': quiz,
+            'perguntas': perguntas,
+            'pontuacao': pontuacao_obtida,
+            'total': perguntas.count() * 100,
+            'finalizado': True,
+        }
+        return render(request, 'quizzes.html', context)
+    
+class RankingView(LoginRequiredMixin, View):
+    def get(self, request, *args, **kwargs):
+        usuarios = Usuario.objects.all()
+
+        ranking = []
+
+        for usuario in usuarios:
+            tentativas = TentativaQuiz.objects.filter(usuario=usuario)
+
+            pontos = 0
+
+            for tentativa in tentativas:
+                pontos += tentativa.pontuacao
+
+            ranking.append({
+                'usuario': usuario,
+                'pontos': pontos
+            })
+
+        ranking.sort(key=lambda x: x['pontos'], reverse=True)
+
+        return render(request, 'ranking.html', {
+                'ranking': ranking
+            })

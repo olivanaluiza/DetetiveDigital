@@ -12,50 +12,63 @@
 <body class="fundo-dark">
 
  <!-- NAVBAR -->
-<nav class="navbar navbar-expand-lg py-3 border-bottom border-dark">
-    <div class="container">
+ <nav class="navbar navbar-expand-xl navbar-dark py-3 px-4">
+    <div class="container-fluid px-xl-5">
+        
         <a class="navbar-brand d-flex align-items-center gap-2" href="{% url 'index' %}">
-            <i class="bi bi-fingerprint logo-icon"></i>
+            <div class="logo-icon">
+                <i class="bi bi-fingerprint"></i>
+            </div>
             <div class="logo-texto">
                 <span class="marca-topo">DETETIVE</span>
                 <span class="marca-base">DIGITAL</span>
             </div>
         </a>
 
-        <button class="navbar-toggler border-0 text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
-            <i class="bi bi-list fs-2 text-verde"></i>
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#menuNavbar">
+            <span class="navbar-toggler-icon"></span>
         </button>
 
-        <div class="collapse navbar-collapse" id="navbarContent">
-            <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-lg-3">
+        <div class="collapse navbar-collapse" id="menuNavbar">
+            <ul class="navbar-nav mx-auto mb-2 mb-xl-0 gap-xl-4 text-center">
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'index' %}">Início</a>
+                    <a class="nav-link active-link" href="{% url 'index' %}">Início</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'index' %}#sobre">Sobre</a>
+                    <a class="nav-link" href="#">Sobre</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'index' %}#como-funciona">Como Funciona</a>
+                    <a class="nav-link" href="#">Como Funciona</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'index' %}#tipos-de-golpes">Tipos de Golpes</a>
+                    <a class="nav-link" href="{% url 'quizzes' %}">Quizzes</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'index' %}#ranking">Ranking</a>
+                    <a class="nav-link" href="{% url 'ranking' %}">Ranking</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'index' %}#contato">Contato</a>
+                    <a class="nav-link" href="#">Contato</a>
                 </li>
             </ul>
 
-            <div class="d-flex align-items-center gap-2">
-                <a href="{% url 'perfil' %}" class="btn btn-entrar active-link">
-                    <i class="bi bi-person-circle me-1"></i> {{ user.username }}
-                </a>
-                <a href="{% url 'logout' %}" class="btn btn-outline-danger btn-sm px-3 rounded-2 fw-semibold">
-                    <i class="bi bi-box-arrow-right me-1"></i> Sair
-                </a>
-            </div>
+    <!-- Autenticação -->
+    {% if user.is_authenticated %}
+        <div class="d-flex align-items-center justify-content-center gap-3">
+            <a href="{% url 'perfil' %}" class="btn btn-entrar px-3 d-flex align-items-center gap-2">
+                <i class="bi bi-person-circle"></i> {{ user.username }}
+            </a>
+            <a href="{% url 'logout' %}" class="btn btn-outline-danger px-3" title="Sair">
+                <i class="bi bi-box-arrow-right"></i>
+            </a>
+        </div>
+    {% else %}
+        <!-- tela para quem NÃO está logado -->
+        <div class="d-flex align-items-center justify-content-center gap-3">
+            <a href="{% url 'login' %}" class="btn btn-entrar px-4">Entrar</a>
+            <a href="{% url 'cadastro' %}" class="btn btn-cadastrar px-4">Cadastrar</a>
+        </div>
+    {% endif %}
+
         </div>
     </div>
 </nav>

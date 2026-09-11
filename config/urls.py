@@ -11,5 +11,6 @@ urlpatterns = [
     path('perfil/', PerfilView.as_view(), name='perfil'),
     path('logout/', LogoutView.as_view(), name='logout'),
     path('quizzes/', QuizzesView.as_view(), name='quizzes'),
-    path('quiz/<int:pk>/', QuizDetalheView.as_view(), name='detalhe_quiz'),
+    path('quiz/<int:pk>/', QuizDetalheView.as_view(), name='quiz_detalhe'),
+    path('ranking/', RankingView.as_view(), name='ranking'),
 ]
