@@ -1,0 +1,408 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Denúncias - Detetive Digital</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body class="fundo-dark">
+
+    <nav class="navbar navbar-expand-xl navbar-dark py-3 px-4">
+        <div class="container-fluid px-xl-5">
+            
+            <a class="navbar-brand d-flex align-items-center gap-2" href="{% url 'index' %}">
+                <div class="logo-icon">
+                    <i class="bi bi-fingerprint"></i>
+                </div>
+                <div class="logo-texto">
+                    <span class="marca-topo">DETETIVE</span>
+                    <span class="marca-base">DIGITAL</span>
+                </div>
+            </a>
+    
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#menuNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+    
+            <div class="collapse navbar-collapse" id="menuNavbar">
+                <ul class="navbar-nav mx-auto mb-2 mb-xl-0 gap-xl-4 text-center">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'index' %}">Início</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'alertas' %}">Alertas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active-link" href="{% url 'denuncias' %}">Denúncias</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'quizzes' %}">Quizzes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'ranking' %}">Ranking</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'contato' %}">Contato</a>
+                    </li>
+                </ul>
+    
+        <!-- Autenticação -->
+        {% if user.is_authenticated %}
+            <div class="d-flex align-items-center justify-content-center gap-3">
+                <a href="{% url 'perfil' %}" class="btn btn-entrar px-3 d-flex align-items-center gap-2">
+                    <i class="bi bi-person-circle"></i> {{ user.username }}
+                </a>
+                <a href="{% url 'logout' %}" class="btn btn-outline-danger px-3" title="Sair">
+                    <i class="bi bi-box-arrow-right"></i>
+                </a>
+            </div>
+        {% else %}
+            <!-- tela para quem NÃO está logado -->
+            <div class="d-flex align-items-center justify-content-center gap-3">
+                <a href="{% url 'login' %}" class="btn btn-entrar px-4">Entrar</a>
+                <a href="{% url 'cadastro' %}" class="btn btn-cadastrar px-4">Cadastrar</a>
+            </div>
+        {% endif %}
+    
+            </div>
+        </div>
+    </nav>
+<!-- CONTEÚDO -->
+<main class="container py-5">
+
+    <!-- CABEÇALHO -->
+    <div class="denuncia-header text-center mb-5">
+
+        <div class="denuncia-icon mx-auto mb-3">
+            <i class="bi bi-megaphone-fill"></i>
+        </div>
+
+        <h1 class="titulo-denuncia">
+            Faça uma denúncia
+        </h1>
+
+        <p class="subtitulo-denuncia">
+            Encontrou um possível golpe digital?
+            Ajude outras pessoas denunciando o ocorrido.
+        </p>
+
+    </div>
+
+
+    <!-- MENSAGENS -->
+    {% if messages %}
+
+        {% for message in messages %}
+
+            <div
+                class="alert alert-{{ message.tags }} alert-dismissible fade show"
+                role="alert"
+            >
+
+                {{ message }}
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"
+                ></button>
+
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+
+    <!-- FORMULÁRIO -->
+    <div class="denuncia-container">
+
+        <div class="card-denuncia">
+
+            <div class="denuncia-form-title">
+
+                <i class="bi bi-file-earmark-text-fill"></i>
+
+                <span>
+                    Informações da denúncia
+                </span>
+
+            </div>
+
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+                <!-- TIPO DO GOLPE -->
+                <div class="mb-4">
+
+                    <label
+                        for="tipo_golpe"
+                        class="form-label"
+                    >
+                        Tipo do golpe
+                    </label>
+
+                    <select
+                        name="tipo_golpe"
+                        id="tipo_golpe"
+                        class="form-control campo-input"
+                        required
+                    >
+
+                        <option value="">
+                            Selecione o tipo do golpe
+                        </option>
+
+                        <option value="Phishing">
+                            Phishing
+                        </option>
+
+                        <option value="Falso site">
+                            Falso site
+                        </option>
+
+                        <option value="Falso prêmio">
+                            Falso prêmio
+                        </option>
+
+                        <option value="Golpe bancário">
+                            Golpe bancário
+                        </option>
+
+                        <option value="Falsa vaga de emprego">
+                            Falsa vaga de emprego
+                        </option>
+
+                        <option value="Golpe em redes sociais">
+                            Golpe em redes sociais
+                        </option>
+
+                        <option value="Outro">
+                            Outro
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- DESCRIÇÃO -->
+                <div class="mb-4">
+
+                    <label
+                        for="descricao"
+                        class="form-label"
+                    >
+                        Descrição da denúncia
+                    </label>
+
+                    <textarea
+                        name="descricao"
+                        id="descricao"
+                        class="form-control campo-input denuncia-textarea"
+                        rows="7"
+                        placeholder="Conte o que aconteceu, como você recebeu a mensagem ou como o golpe foi apresentado..."
+                        required
+                    ></textarea>
+
+                </div>
+
+
+                <!-- AVISO -->
+                <div class="denuncia-aviso mb-4">
+
+                    <i class="bi bi-shield-exclamation"></i>
+
+                    <div>
+
+                        <strong>Importante:</strong>
+
+                        não informe senhas, códigos de autenticação,
+                        dados bancários ou outras informações pessoais
+                        na denúncia. Os dados cadastrados serão publicados no site.
+
+                    </div>
+
+                </div>
+
+
+                <!-- BOTÃO -->
+                <button
+                    type="submit"
+                    class="btn btn-verde-acao w-100"
+                >
+
+                    <i class="bi bi-send-fill me-2"></i>
+
+                    Enviar denúncia
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- ÁREA DO ADMINISTRADOR -->
+    <!-- ================================================= -->
+
+    {% if user.is_staff %}
+
+    <div class="denuncia-container mt-5">
+
+        <div class="card-denuncia">
+
+            <div class="denuncia-form-title">
+
+                <i class="bi bi-shield-check"></i>
+
+                <span>
+                    Gerenciar denúncias
+                </span>
+
+            </div>
+
+
+            {% for denuncia in denuncias %}
+
+            <div class="card mb-4 p-4">
+
+                <!-- TIPO E STATUS -->
+                <div class="d-flex justify-content-between align-items-center mb-3">
+
+                    <h5 class="mb-0">
+                        {{ denuncia.tipo_golpe }}
+                    </h5>
+
+
+                    {% if denuncia.status == 'Pendente' %}
+
+                        <span class="badge bg-warning text-dark">
+                            Pendente
+                        </span>
+
+                    {% elif denuncia.status == 'Aprovada' %}
+
+                        <span class="badge bg-success">
+                            Aprovada
+                        </span>
+
+                    {% elif denuncia.status == 'Rejeitada' %}
+
+                        <span class="badge bg-danger">
+                            Rejeitada
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- DESCRIÇÃO -->
+                <p class="mb-3">
+                    {{ denuncia.descricao }}
+                </p>
+
+
+                <!-- DATA -->
+                <small class="text-muted">
+                    Enviada em {{ denuncia.data_registro|date:"d/m/Y" }}
+                </small>
+
+
+                <!-- BOTÕES -->
+                {% if denuncia.status == 'Pendente' %}
+
+                <div class="mt-4 d-flex gap-2">
+
+                    <!-- APROVAR -->
+                    <form
+                        method="POST"
+                        action="{% url 'aprovar_denuncia' denuncia.id_denuncia %}"
+                    >
+
+                        {% csrf_token %}
+
+                        <button
+                            type="submit"
+                            class="btn btn-success"
+                        >
+
+                            <i class="bi bi-check-lg me-1"></i>
+
+                            Aprovar
+
+                        </button>
+
+                    </form>
+
+
+                    <!-- REJEITAR -->
+                    <form
+                        method="POST"
+                        action="{% url 'rejeitar_denuncia' denuncia.id_denuncia %}"
+                    >
+
+                        {% csrf_token %}
+
+                        <button
+                            type="submit"
+                            class="btn btn-danger"
+                        >
+
+                            <i class="bi bi-x-lg me-1"></i>
+
+                            Rejeitar
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+                {% endif %}
+
+            </div>
+
+
+            {% empty %}
+
+                <p class="text-center mb-0">
+                    Nenhuma denúncia recebida.
+                </p>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+    {% endif %}
+
+</main>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>

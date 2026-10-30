@@ -49,7 +49,11 @@ class CadastroView(View):
             messages.error(request, 'Este nome de usuário já está em uso.')
             return render(request, 'cadastro.html')
 
-        # Salva o usuário com senha criptografada no banco
+        if Usuario.objects.filter(email=email_input).exists():
+            messages.error(request, 'Este e-mail já está cadastrado.')
+            return render(request, 'cadastro.html')
+
+        # 1. Cria o usuário no sistema padrão do Django (para o login funcionar)
         novo_usuario = User.objects.create_user(
             username=usuario_input,
             email=email_input,
@@ -57,10 +61,16 @@ class CadastroView(View):
         )
         novo_usuario.save()
 
+        # 2. CRIA TAMBÉM NA SUA TABELA 'Usuario' (Para o Ranking e Quizzes funcionarem!)
+        Usuario.objects.create(
+            nome=usuario_input,
+            email=email_input,
+            senha=novo_usuario.password  # Salva a senha criptografada do Django no seu campo 'senha'
+        )
+
         # Loga automaticamente após cadastrar
         login(request, novo_usuario)
         return redirect('index')
-
 class PerfilView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         return render(request, 'perfil.html')
@@ -128,14 +138,22 @@ class QuizDetalheView(View):
         
         request.session[chave_sessao] = respostas_salvas
 
-        pagina_atual = int(request.POST.get('pagina_atual', 1))
+        # Pega a página atual com segurança para evitar erros
+        try:
+            pagina_atual = int(request.POST.get('pagina_atual', 1))
+        except (ValueError, TypeError):
+            pagina_atual = 1
+
         acao = request.POST.get('acao')
 
-        # Se o usuário clicou em "Próxima" ou "Voltar", salva na sessão e redireciona a página
-        if acao == 'proxima':
+        # Se o usuário clicou em "Voltar", recua a página com segurança (mínimo 1)
+        if acao == 'voltar':
+            pagina_destino = max(1, pagina_atual - 1)
+            return redirect(f'/quiz/{pk}/?pagina={pagina_destino}')
+
+        # Se o usuário clicou em "Próxima"
+        elif acao == 'proxima':
             return redirect(f'/quiz/{pk}/?pagina={pagina_atual + 1}')
-        elif acao == 'voltar':
-            return redirect(f'/quiz/{pk}/?pagina={pagina_atual - 1}')
 
         # Se clicou em "Finalizar" (acao == 'finalizar')
         pontuacao_obtida = 0
@@ -168,7 +186,6 @@ class QuizDetalheView(View):
             'finalizado': True,
         }
         return render(request, 'quizzes.html', context)
-    
 class RankingView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
 
@@ -220,3 +237,105 @@ class RankingView(LoginRequiredMixin, View):
                 'ranking': ranking
             }
         )
+    
+class DenunciasView(LoginRequiredMixin, View):
+
+    def get(self, request, *args, **kwargs):
+
+        denuncias = Denuncia.objects.all().order_by('-data_registro')
+
+        return render(
+            request,
+            'denuncias.html',
+            {
+                'denuncias': denuncias
+            }
+        )
+
+    def post(self, request, *args, **kwargs):
+
+        tipo_golpe = request.POST.get('tipo_golpe')
+        descricao = request.POST.get('descricao')
+
+        usuario_custom = Usuario.objects.filter(
+            email=request.user.email
+        ).first()
+
+        if not usuario_custom:
+            messages.error(
+                request,
+                'Não foi possível encontrar seus dados de usuário.'
+            )
+            return redirect('denuncias')
+
+        if not tipo_golpe or not descricao:
+            messages.error(
+                request,
+                'Preencha todos os campos obrigatórios.'
+            )
+            return redirect('denuncias')
+
+        Denuncia.objects.create(
+            usuario=usuario_custom,
+            tipo_golpe=tipo_golpe,
+            descricao=descricao,
+            status='Pendente'
+        )
+
+        messages.success(
+            request,
+            'Sua denúncia foi enviada e será analisada pela equipe.'
+        )
+
+        return redirect('denuncias')
+
+class AlertasView(View):
+    def get(self, request, *args, **kwargs):
+
+        # Busca somente denúncias aprovadas
+        denuncias_aprovadas = Denuncia.objects.filter(
+            status='Aprovada'
+        ).order_by('-data_registro')
+
+        return render(
+            request,
+            'alertas.html',
+            {
+                'alertas': denuncias_aprovadas
+            }
+        )
+    
+def aprovar_denuncia(request, id_denuncia):
+    if not request.user.is_staff:
+        messages.error(request, 'Você não tem permissão para realizar esta ação.')
+        return redirect('denuncias')
+
+    denuncia = get_object_or_404(Denuncia, id_denuncia=id_denuncia)
+
+    denuncia.status = 'Aprovada'
+    denuncia.save()
+
+    messages.success(request, 'Denúncia aprovada com sucesso!')
+
+    return redirect('denuncias')
+
+
+def rejeitar_denuncia(request, id_denuncia):
+    if not request.user.is_staff:
+        messages.error(request, 'Você não tem permissão para realizar esta ação.')
+        return redirect('denuncias')
+
+    denuncia = get_object_or_404(Denuncia, id_denuncia=id_denuncia)
+
+    denuncia.status = 'Rejeitada'
+    denuncia.save()
+
+    messages.success(request, 'Denúncia rejeitada.')
+
+    return redirect('denuncias')
+
+class ContatoView(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, 'contato.html')
+    def post(self, request):
+        pass

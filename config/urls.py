@@ -13,4 +13,9 @@ urlpatterns = [
     path('quizzes/', QuizzesView.as_view(), name='quizzes'),
     path('quiz/<int:pk>/', QuizDetalheView.as_view(), name='quiz_detalhe'),
     path('ranking/', RankingView.as_view(), name='ranking'),
+    path('denuncias/', DenunciasView.as_view(), name='denuncias'),
+    path('alertas/', AlertasView.as_view(), name='alertas'),
+    path('denuncias/<int:id_denuncia>/aprovar/',aprovar_denuncia,name='aprovar_denuncia'),
+    path('denuncias/<int:id_denuncia>/rejeitar/',rejeitar_denuncia,name='rejeitar_denuncia'),
+    path('contato/', ContatoView.as_view(), name='contato'),
 ]

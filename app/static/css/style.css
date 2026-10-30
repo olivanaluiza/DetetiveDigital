@@ -844,3 +844,483 @@ body.fundo-dark {
     }
 
 }
+
+/* ==========================================================
+   DENÚNCIAS
+   ========================================================== */
+
+   .denuncia-header {
+    padding-top: 20px;
+}
+
+.denuncia-icon {
+    width: 70px;
+    height: 70px;
+    margin: 0 auto 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 20px;
+
+    background: rgba(34, 197, 94, 0.08);
+    border: 1px solid rgba(34, 197, 94, 0.25);
+
+    color: #22c55e;
+
+    font-size: 30px;
+
+    box-shadow: 0 0 30px rgba(34, 197, 94, 0.08);
+}
+
+.titulo-denuncia {
+    color: #ffffff;
+    font-size: 38px;
+    font-weight: 800;
+    margin-bottom: 10px;
+}
+
+.titulo-denuncia span {
+    color: #22c55e;
+}
+
+.subtitulo-denuncia {
+    color: #94a3b8;
+    font-size: 16px;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+.denuncia-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.card-denuncia {
+    background-color: #060c15;
+    border: 1px solid #131f30;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+}
+
+.denuncia-form-title h4 {
+    color: #ffffff;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.denuncia-form-title h4 i {
+    color: #22c55e;
+}
+
+.denuncia-form-title p {
+    color: #64748b;
+    margin-bottom: 0;
+    font-size: 0.9rem;
+}
+
+.card-denuncia .form-label {
+    color: #94a3b8;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.card-denuncia .form-label span {
+    color: #475569;
+    font-weight: 400;
+}
+
+.card-denuncia .form-select {
+    color: #ffffff;
+}
+
+.card-denuncia .form-select option {
+    background-color: #0d1726;
+    color: #ffffff;
+}
+
+.denuncia-textarea {
+    resize: vertical;
+    min-height: 150px;
+}
+
+.denuncia-aviso {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+
+    padding: 14px 16px;
+
+    background-color: rgba(34, 197, 94, 0.05);
+    border: 1px solid rgba(34, 197, 94, 0.15);
+    border-radius: 10px;
+}
+
+.denuncia-aviso i {
+    color: #22c55e;
+    font-size: 1.1rem;
+    margin-top: 2px;
+}
+
+.denuncia-aviso p {
+    color: #94a3b8;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    margin: 0;
+}
+
+
+/* ==========================================================
+   ALERTAS
+   ========================================================== */
+
+.alertas-header {
+    padding-top: 20px;
+}
+
+.alertas-icon {
+    width: 70px;
+    height: 70px;
+    margin: 0 auto 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 20px;
+
+    background: rgba(34, 197, 94, 0.08);
+    border: 1px solid rgba(34, 197, 94, 0.25);
+
+    color: #22c55e;
+
+    font-size: 30px;
+
+    box-shadow: 0 0 30px rgba(34, 197, 94, 0.08);
+}
+
+.titulo-alertas {
+    color: #ffffff;
+    font-size: 38px;
+    font-weight: 800;
+    margin-bottom: 10px;
+}
+
+.titulo-alertas span {
+    color: #22c55e;
+}
+
+.subtitulo-alertas {
+    color: #94a3b8;
+    font-size: 16px;
+    max-width: 650px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+
+/* ALERTA DE DESTAQUE */
+
+.alerta-destaque {
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+
+    padding: 24px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(34, 197, 94, 0.10),
+            rgba(6, 12, 21, 0.95)
+        );
+
+    border: 1px solid rgba(34, 197, 94, 0.25);
+    border-radius: 16px;
+
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.alerta-destaque-icon {
+    width: 50px;
+    height: 50px;
+
+    min-width: 50px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    background: rgba(34, 197, 94, 0.12);
+
+    color: #22c55e;
+
+    font-size: 22px;
+}
+
+.alerta-tag {
+    display: inline-block;
+
+    color: #22c55e;
+
+    font-size: 0.72rem;
+    font-weight: 800;
+
+    letter-spacing: 0.8px;
+
+    margin-bottom: 5px;
+}
+
+.alerta-destaque h3 {
+    color: #ffffff;
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.alerta-destaque p {
+    color: #94a3b8;
+    font-size: 0.9rem;
+    margin: 0;
+    line-height: 1.5;
+}
+
+
+/* LISTA */
+
+.alertas-lista {
+    max-width: 900px;
+    margin: 0 auto;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 14px;
+}
+
+
+/* CARD */
+
+.card-alerta {
+    display: flex;
+    align-items: flex-start;
+    gap: 18px;
+
+    padding: 22px;
+
+    background: #060c15;
+
+    border: 1px solid #131f30;
+
+    border-radius: 16px;
+
+    transition: all 0.2s ease;
+}
+
+.card-alerta:hover {
+    transform: translateY(-2px);
+
+    border-color: rgba(34, 197, 94, 0.3);
+
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+}
+
+.alerta-card-icon {
+    width: 48px;
+    height: 48px;
+
+    min-width: 48px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    background: rgba(34, 197, 94, 0.08);
+
+    color: #22c55e;
+
+    font-size: 20px;
+}
+
+.alerta-card-content {
+    flex: 1;
+}
+
+.badge-alerta {
+    display: inline-block;
+
+    padding: 4px 9px;
+
+    border-radius: 6px;
+
+    font-size: 0.68rem;
+    font-weight: 800;
+
+    letter-spacing: 0.4px;
+}
+
+.alerta-alto {
+    color: #f87171;
+    background: rgba(239, 68, 68, 0.10);
+    border: 1px solid rgba(239, 68, 68, 0.25);
+}
+
+.alerta-medio {
+    color: #fbbf24;
+    background: rgba(245, 158, 11, 0.10);
+    border: 1px solid rgba(245, 158, 11, 0.25);
+}
+
+.alerta-baixo {
+    color: #22c55e;
+    background: rgba(34, 197, 94, 0.10);
+    border: 1px solid rgba(34, 197, 94, 0.25);
+}
+
+.alerta-data {
+    color: #475569;
+    font-size: 0.75rem;
+}
+
+.alerta-card-content h4 {
+    color: #ffffff;
+    font-size: 1.05rem;
+    font-weight: 700;
+
+    margin: 8px 0;
+}
+
+.alerta-card-content > p {
+    color: #94a3b8;
+
+    font-size: 0.88rem;
+    line-height: 1.6;
+
+    margin-bottom: 14px;
+}
+
+
+/* DICA */
+
+.alerta-dica {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+
+    padding: 11px 13px;
+
+    background: #0d1726;
+
+    border: 1px solid #1e293b;
+
+    border-radius: 8px;
+
+    color: #94a3b8;
+
+    font-size: 0.82rem;
+    line-height: 1.5;
+}
+
+.alerta-dica i {
+    color: #22c55e;
+    margin-top: 2px;
+}
+
+.alerta-dica strong {
+    color: #ffffff;
+}
+
+
+/* VAZIO */
+
+.alertas-vazio {
+    text-align: center;
+
+    padding: 70px 30px;
+
+    background: #060c15;
+
+    border: 1px solid #131f30;
+
+    border-radius: 16px;
+}
+
+.alertas-vazio-icon {
+    width: 65px;
+    height: 65px;
+
+    margin: 0 auto 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: rgba(34, 197, 94, 0.08);
+
+    color: #22c55e;
+
+    font-size: 28px;
+}
+
+.alertas-vazio h4 {
+    color: #ffffff;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.alertas-vazio p {
+    color: #64748b;
+    margin-bottom: 0;
+}
+
+
+/* ==========================================================
+   RESPONSIVO
+   ========================================================== */
+
+@media (max-width: 576px) {
+
+    .titulo-denuncia,
+    .titulo-alertas {
+        font-size: 30px;
+    }
+
+    .subtitulo-denuncia,
+    .subtitulo-alertas {
+        font-size: 14px;
+    }
+
+    .card-denuncia {
+        padding: 20px !important;
+    }
+
+    .alerta-destaque {
+        padding: 18px;
+        gap: 12px;
+    }
+
+    .card-alerta {
+        padding: 16px;
+        gap: 12px;
+    }
+
+    .alerta-card-icon {
+        width: 42px;
+        height: 42px;
+        min-width: 42px;
+        font-size: 17px;
+    }
+
+}

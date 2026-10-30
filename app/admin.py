@@ -32,6 +32,35 @@ class TentativaQuizAdmin(admin.ModelAdmin):
 
 @admin.register(Denuncia)
 class DenunciaAdmin(admin.ModelAdmin):
-    list_display = ('id_denuncia', 'usuario', 'tipo_golpe', 'status', 'data_registro')
-    search_fields = ('tipo_golpe', 'descricao', 'usuario__nome')
-    list_filter = ('status', 'data_registro', 'tipo_golpe')
+
+    list_display = (
+        'id_denuncia',
+        'usuario',
+        'tipo_golpe',
+        'status',
+        'data_registro'
+    )
+
+    search_fields = (
+        'tipo_golpe',
+        'descricao',
+        'usuario__nome'
+    )
+
+    list_filter = (
+        'status',
+        'data_registro',
+        'tipo_golpe'
+    )
+
+    fields = (
+        'usuario',
+        'tipo_golpe',
+        'descricao',
+        'status',
+        'data_registro',
+    )
+
+    readonly_fields = (
+        'data_registro',
+    )

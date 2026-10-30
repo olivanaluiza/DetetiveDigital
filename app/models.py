@@ -84,7 +84,16 @@ class Denuncia(models.Model):
     tipo_golpe = models.CharField(max_length=100, verbose_name="Tipo do Golpe")
     descricao = models.TextField(verbose_name="Descrição")
     data_registro = models.DateField(auto_now_add=True, verbose_name="Data do Registro")
-    status = models.CharField(max_length=20, default='Pendente', verbose_name="Status") # <-- Campo status incluído!
+    status = models.CharField(
+    max_length=20,
+    choices=[
+        ('Pendente', 'Pendente'),
+        ('Aprovada', 'Aprovada'),
+        ('Rejeitada', 'Rejeitada'),
+    ],
+    default='Pendente',
+    verbose_name="Status"
+)
 
     def __str__(self):
         return f"{self.tipo_golpe} - {self.usuario.nome}"
